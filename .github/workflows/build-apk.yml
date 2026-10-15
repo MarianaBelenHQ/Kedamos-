@@ -1,0 +1,49 @@
+name: Compilar Kedamos APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'www/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'capacitor.config.json'
+      - '.github/workflows/build-apk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Instalar dependencias
+        run: npm install
+      - name: Preparar archivos web
+        run: npm run build
+      - name: Crear proyecto Android
+        run: npx cap add android
+      - name: Sincronizar aplicación
+        run: npx cap sync android
+      - name: Compilar APK de prueba
+        working-directory: android
+        run: chmod +x gradlew && ./gradlew assembleDebug
+      - name: Publicar APK como artefacto descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kedamos-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
