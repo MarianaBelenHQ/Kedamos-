@@ -1,25 +1,41 @@
-# Kedamos! — reconstrucción independiente
+# Kedamos! — aplicación para organizar planes
 
-Proyecto nuevo basado exclusivamente en las funciones visibles de la portada pública de squad-adventure-plan.emergent.host. No es extracción del código propietario de Emergent.
+Aplicación móvil/web para crear salidas con amistades, proponer actividades y compartir el resumen del plan.
 
-## Funciones incluidas
-- Creación de salidas: fecha, ubicación, participantes, presupuesto
-- GPS opcional
-- Cinco ideas de actividades por presupuesto (catálogo orientativo, NO IA)
-- Votación local y selección visual de ganador
-- Compartir resumen mediante sistema operativo o portapapeles
-- Fotos comprimidas y guardadas en localStorage
-- Uso local/offline del HTML
+## Funciones
+- Crear salidas con fecha, ubicación, participantes y presupuesto.
+- GPS opcional.
+- Ideas de actividades según el presupuesto (catálogo orientativo).
+- Votación local y selección visual de una idea.
+- Compartir el resumen mediante el sistema operativo o el portapapeles.
+- Fotos comprimidas guardadas localmente.
+- Interfaz que puede abrirse en navegador y empaquetarse como aplicación Android.
 
-## Limitaciones
-No contiene cuentas de usuario, backend, sincronización multiusuario, votación remota, IA, búsqueda real de negocios ni almacenamiento en nube. Las ideas y precios son genéricos. Una app de producción requiere backend, autenticación y protección de datos.
+## Descargar el APK
+El repositorio incluye un flujo de GitHub Actions que compila una versión APK de prueba.
 
-## Probar
-Abrir `www/index.html` en navegador. En producción y APK los permisos de GPS pueden depender del entorno seguro.
+1. Abre la pestaña **Actions**: https://github.com/MarianaBelenHQ/Kedamos-/actions
+2. Selecciona **Compilar Kedamos APK**.
+3. Si todavía no se ha ejecutado, pulsa **Run workflow** y confirma la rama `main`.
+4. Espera a que la ejecución termine con una marca verde.
+5. En la ejecución, busca **Artifacts** y descarga `Kedamos-APK`.
+6. Extrae el ZIP y abre `app-debug.apk` en tu Android. Es posible que Android te pida autorizar la instalación desde esa fuente.
 
-## Compilar APK con GitHub
-1. Crear un repositorio NUEVO en GitHub y subir el CONTENIDO de esta carpeta (incluidos archivos ocultos `.github`).
-2. Abrir Actions > `Compilar Kedamos APK` > Run workflow.
-3. En ejecución exitosa descargar artefacto `Kedamos-APK` y extraer `app-debug.apk`.
+También se iniciará una compilación cuando cambien los archivos de `www/`, `scripts/` o la configuración de la aplicación.
 
-La ejecución inicial de GitHub Actions NO se ha probado. El APK es de depuración, no está listo para Google Play.
+## Desarrollo local
+Se necesita Node.js 20 y Java 17 para compilar Android.
+
+```bash
+npm install
+npm run build
+npx cap add android
+npx cap sync android
+cd android
+./gradlew assembleDebug
+``
+
+El APK generado es de depuración, para pruebas. Para publicar en Google Play hay que generar una versión release firmada.
+
+## Limitaciones actuales
+La app guarda datos localmente. No hay cuentas de usuario, sincronización entre dispositivos ni votación remota; el GPS depende de los permisos del sistema y de un contexto compatible. Las ideas y los presupuestos son orientativos.
